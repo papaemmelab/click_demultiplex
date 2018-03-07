@@ -1,0 +1,15 @@
+[paths]
+source =
+   click_demultiplex
+   */site-packages/click_demultiplex
+
+[run]
+include =
+    click_demultiplex/*
+
+source =
+    click_demultiplex
+    tests
+
+omit =
+    *click_demultiplex/__main__.py
