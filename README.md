@@ -4,7 +4,21 @@
 [![travis badge][travis_badge]][travis_base]
 [![codecov badge][codecov_badge]][codecov_base]
 
-Command Line Tool to Demultiplex a paired-end fastq file into several fastq files, based on unique barcodes.
+Demultiplex a paired-end fastq file into several fastq files,
+based on unique barcodes.
+The barcodes are sequences attached at the beginning of each read.
+By default, it trimms the barcodes off the demultiplexed reads,
+unless --no-trim is passed.
+
+The barcodes text file should be formatted to have 1 column with
+the barcodes, and an optional additional column to asign names to
+the demultiplexed result files.  the following structure:
+
+    \b
+    ATTCGT       A1
+    ATATTC       A2
+    TCGGAC       B1
+    TCGAGG       B2
 
 ## Features
 

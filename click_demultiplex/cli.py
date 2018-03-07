@@ -18,14 +18,67 @@ Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 import click
 
 from click_demultiplex import __version__
+from click_demultiplex import commands
+
 
 @click.command()
-@click.option("--message", default="Hello World")
-@click.version_option(version=__version__)
-def main(message):
-    """Echo message and exit."""
-    click.echo(message)
+@click.option(
+    "--outdir",
+    show_default=True,
+    help="Path to output directory.",
+    default=None)
+@click.option(
+    "--r1",
+    required=True,
+    type=click.Path(),
+    help="Path to R1 fastq file. Reads in forward orientation")
+@click.option(
+    "--r2",
+    required=True,
+    type=click.Path(),
+    help="Path to R2 fatsq file. Reads in reverse-complement orientation")
+@click.option(
+    "--barcodes",
+    required=True,
+    type=click.Path(),
+    help="A text file with the barcodes in each line.")
+@click.option(
+    "--no-trim",
+    default=False,
+    is_flag=True,
+    help="Flag to avoid trimming the barcodes in each read.")
+@click.option(
+    "--overwrite",
+    default=False,
+    is_flag=True,
+    help="Flag to overwrite the output files if they already exist.")
+@click.version_option(__version__)
+def main(outdir, r1, r2, barcodes, no_trim, overwrite):
+    """
+    Demultiplex a paired-end fastq file into several fastq files,
+    based on unique barcodes.
+    The barcodes are sequences attached at the beginning of each read.
+    By default, it trimms the barcodes off the demultiplexed reads,
+    unless --no-trim is passed.
 
+    The barcodes text file should be formatted to have 1 column with
+    the barcodes, and an optional additional column to asign names to
+    the demultiplexed result files.  the following structure:
+
+        \b
+        ATTCGT       A1
+        ATATTC       A2
+        TCGGAC       B1
+        TCGAGG       B2
+    """
+    commands.demultiplex(
+        output_dir=outdir,
+        r1_path=r1,
+        r2_path=r2,
+        barcodes_path=barcodes,
+        no_trim=no_trim,
+        overwrite=overwrite,
+    )
 
 if __name__ == "__main__":
     main()  # pylint: disable=no-value-for-parameter
