@@ -63,9 +63,9 @@ from click_demultiplex import commands
     help="Maximum number of mismatches allowed in the barcode to demultiplex.")
 @click.version_option(__version__)
 def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix, max_mismatches):
-    """
-    Demultiplex a paired-end fastq file into several fastq files,
-    based on unique barcodes.
+    r"""
+    Demultiplex a paired-end fastq file into several based on unique barcodes.
+
     The barcodes are sequences attached at the beginning of each read.
     By default, it trimms the barcodes off the demultiplexed reads,
     unless --no-trim is passed.

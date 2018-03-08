@@ -1,15 +1,17 @@
+"""click_demultiplex main command."""
+
 from os.path import join
-from os import listdir
 import os
+import gzip
 import subprocess
 
 from Bio import SeqIO
 import click
-import gzip
 
 
 # Utils for classifying Sequences
 def hamming_distance(pattern1, pattern2):
+    """Return the hamming distance between 2 patterns."""
     if len(pattern1) == len(pattern2):
         return sum([
             pattern1[index] != pattern2[index]
@@ -19,6 +21,7 @@ def hamming_distance(pattern1, pattern2):
 
 
 def find_best_barcode(record, barcodes):
+    """Return the best hamming distance barcode."""
     distance = [
         hamming_distance(barcode, record.seq[:len(barcode)])
         for barcode in barcodes.values()
@@ -32,6 +35,7 @@ def find_best_barcode(record, barcodes):
 
 
 def find_best_match(record1, record2, barcodes, max_mismatches):
+    """Return the best match barcode between R1 and R2."""
     name1, barcode1, distance1 = find_best_barcode(record1, barcodes)
     name2, barcode2, distance2 = find_best_barcode(record2, barcodes)
 
@@ -44,7 +48,7 @@ def find_best_match(record1, record2, barcodes, max_mismatches):
 
 # Utils to manage files handles
 def create_output_handle(output_dir, name, overwrite, prefix, direction):
-    """ Validate that output dir and files exist."""
+    """Validate that output dir and files exist."""
     if not os.path.isdir(output_dir):
         raise click.UsageError(
             f'Output directory {output_dir} doesn`t exist.'
@@ -64,7 +68,7 @@ def create_output_handle(output_dir, name, overwrite, prefix, direction):
 
 
 def get_files_handles(output_dir, barcodes, overwrite, prefix):
-    """ Manage file handles to keep files open during demultiplexing."""
+    """Manage file handles to keep files open during demultiplexing."""
     return {
         cell: {
             'r1': create_output_handle(output_dir, cell, overwrite, prefix, 1),
@@ -74,6 +78,7 @@ def get_files_handles(output_dir, barcodes, overwrite, prefix):
     }
 
 def close_file_handles(file_handles):
+    """Close every opened file."""
     for file_cell_handles in file_handles.values():
         file_cell_handles['r1'].close()
         file_cell_handles['r2'].close()
@@ -82,10 +87,11 @@ def close_file_handles(file_handles):
 # Util to parse barcodes
 def get_barcodes(barcodes_path):
     """
-    Creates a dictionary with the barcodes. Where the key is name that will
-    be given to the output files, and the value is the barcode.
-    If the text file have a 2nd column this value will be used as name, if not
-    the same barcode will be the name.
+    Create a dictionary with the barcodes.
+
+    Where the key is name that will be given to the output files, and
+    the value is the barcode. If the text file have a 2nd column this
+    value will be used as name, if not the same barcode will be the name.
     """
     barcodes_file = open(barcodes_path, 'r')
     barcodes_lines = [line.split() for line in barcodes_file.readlines()]
@@ -104,7 +110,6 @@ def create_output_stats(
         initial_count,
         prefix):
     """Print stats of results."""
-
     output_stats_path = join(output_dir, f'{prefix}result_stats.txt')
 
     with open(output_stats_path, 'w') as output_stats_file:
@@ -138,7 +143,7 @@ def demultiplex(
         prefix,
         r1_path,
         r2_path):
-
+    """Demultiplex one file into several according the barcodes file."""
     # Parse barcode dictionary
     barcodes = get_barcodes(barcodes_path)
 
@@ -160,8 +165,7 @@ def demultiplex(
         records_r2_gen = SeqIO.parse(fr2, 'fastq')
 
         label = f'Started demultiplexing files {r1_path} and {r2_path}'
-        with click.progressbar(records_r1_gen,
-            label=label, color='green') as bar:
+        with click.progressbar(records_r1_gen, label=label) as bar:
 
             initial_count = 0
 
@@ -204,4 +208,3 @@ def demultiplex(
         initial_count,
         prefix
     )
-
