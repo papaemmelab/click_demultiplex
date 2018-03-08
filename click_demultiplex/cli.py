@@ -71,7 +71,7 @@ def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix, max_mismatches):
     unless --no-trim is passed.
 
     The barcodes text file should be formatted to have 1 column with
-    the barcodes, and an optional additional column to asign names to
+    the barcodes, and an optional additional column to assign names to
     the demultiplexed result files.  the following structure:
 
         \b
