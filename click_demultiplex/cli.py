@@ -83,14 +83,14 @@ def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix, max_mismatches):
     prefix = prefix if prefix.endswith('_') else f'{prefix}_'
 
     commands.demultiplex(
+        barcodes_path=barcodes,
+        max_mismatches=max_mismatches,
+        no_trim=no_trim,
+        prefix=prefix,
         output_dir=outdir,
+        overwrite=overwrite,
         r1_path=r1,
         r2_path=r2,
-        barcodes_path=barcodes,
-        no_trim=no_trim,
-        overwrite=overwrite,
-        prefix=prefix,
-        max_mismatches=max_mismatches,
     )
 
 if __name__ == "__main__":

@@ -113,3 +113,6 @@ venv.bak/
 
 # Test output
 output/
+
+# Pytest Cache
+.pytest_cache/

@@ -109,8 +109,8 @@ def create_output_stats(
 
     with open(output_stats_path, 'w') as output_stats_file:
         output_stats_file.write('Stats of # of reads per barcode:\n\n')
-        output_stats_file.write("{}\t{}\t{}\t{}".format(
-            'Barcode', 'Name', 'Count', 'Output files\n'
+        output_stats_file.write("{}\t{}\t{}\t{}\t{}\n".format(
+            'Barcode', 'Name', 'Count', 'Output R1 file', 'Output R2 file'
         ))
         for name, count in stats.items():
             output_stats_file.write("{}\t{}\t{}\t{}\t{}\n".format(
@@ -130,14 +130,14 @@ def create_output_stats(
 
 # Main Function
 def demultiplex(
-        output_dir,
-        r1_path,
-        r2_path,
         barcodes_path,
+        max_mismatches,
         no_trim,
+        output_dir,
         overwrite,
         prefix,
-        max_mismatches):
+        r1_path,
+        r2_path):
 
     # Parse barcode dictionary
     barcodes = get_barcodes(barcodes_path)

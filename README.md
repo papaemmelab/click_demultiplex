@@ -28,9 +28,9 @@ the demultiplexed result files.  the following structure:
         click_demultiplex --help
 
         click_demultiplex \
-            --r1 example/test_R1.fastq \
-            --r2 example/test_R2.fastq \
-            --barcodes example/test_barcodes.txt \
+            --r1 test/data/test_R1.fastq \
+            --r2 test/data/test_R2.fastq \
+            --barcodes test/data/test_barcodes.txt \
             --outdir my_output_dir \
             --prefix plate_0008
             --no-trim
@@ -44,9 +44,9 @@ the demultiplexed result files.  the following structure:
             --interactive \
             --tty \
             click_demultiplex-image \
-                --r1 /code/example/test_R1.fastq \
-                --r2 /code/example/test_R2.fastq \
-                --barcodes /code/example/test_barcodes.txt \
+                --r1 /code/test/data/test_R1.fastq \
+                --r2 /code/test/data/test_R2.fastq \
+                --barcodes /code/test/data/test_barcodes.txt \
                 --outdir /code/my_output_dir \
 
 * singularity usage
@@ -55,9 +55,9 @@ the demultiplexed result files.  the following structure:
             --workdir /shared_fs/tmp \
             --bind /shared_fs:/shared_fs \
             click_demultiplex-singularity-image-path \
-                --r1 /code/example/test_R1.fastq \
-                --r2 /code/example/test_R2.fastq \
-                --barcodes /code/example/test_barcodes.txt \
+                --r1 /code/test/data/test_R1.fastq \
+                --r2 /code/test/data/test_R2.fastq \
+                --barcodes /code/test/data/test_barcodes.txt \
                 --outdir /code/my_output_dir \
 
 
