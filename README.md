@@ -37,29 +37,32 @@ the demultiplexed result files.  the following structure:
 
 ## 🐳 &nbsp; **Containers Support**
 
-* docker usage
+Having the files in a local directory:
 
-        docker run \
-            --volume /shared_fs:/shared_fs \
-            --interactive \
-            --tty \
-            click_demultiplex-image \
-                --r1 /code/test/data/test_R1.fastq \
-                --r2 /code/test/data/test_R2.fastq \
-                --barcodes /code/test/data/test_barcodes.txt \
-                --outdir /code/my_output_dir \
+        ls local/path/
+            r1.fastq
+            r2.fatsq
+            barcodes.txt
 
-* singularity usage
+* Usage with **docker**
 
-        singularity run \
-            --workdir /shared_fs/tmp \
-            --bind /shared_fs:/shared_fs \
-            click_demultiplex-singularity-image-path \
-                --r1 /code/test/data/test_R1.fastq \
-                --r2 /code/test/data/test_R2.fastq \
-                --barcodes /code/test/data/test_barcodes.txt \
-                --outdir /code/my_output_dir \
+        docker run --volumes local/path:/data juanesarango/click_demultiplex
+            --r1 /data/r1.fastq
+            --r2 /data/r2.fatsq
+            --barcodes /data/barcodes.txt
+            --outdir /data/outdir
 
+* Usage with **singularity**
+
+
+        singularity run --bind local-path:/data docker://juanesarango/click_demultiplex
+            --r1 /data/r1.fastq
+            --r2 /data/r2.fatsq
+            --barcodes /data/barcodes.txt
+            --outdir /data/outdir
+
+
+    See [docker2singularity] if you need a [`singularity`] image. Else use the `docker://` prefix.
 
 ## Contributing
 
@@ -71,7 +74,7 @@ This package was created using [Cookiecutter] and the
 [leukgen/cookiecutter-toil] project template.
 
 <!-- References -->
-[singularity]: http://singularity.lbl.gov/
+[`singularity`]: http://singularity.lbl.gov/
 [docker2singularity]: https://github.com/singularityware/docker2singularity
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [leukgen/cookiecutter-toil]: https://github.com/leukgen/cookiecutter-toil
