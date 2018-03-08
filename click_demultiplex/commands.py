@@ -1,6 +1,7 @@
 from os.path import join
 from os import listdir
 import os
+import subprocess
 
 from Bio import SeqIO
 import click
@@ -99,6 +100,37 @@ def get_barcodes(barcodes_path):
     }
 
 
+def create_output_stats(
+        output_dir,
+        stats,
+        barcodes,
+        output_handles,
+        initial_count):
+    """Print stats of results."""
+
+    output_stats_path = join(output_dir, 'result_stats.txt')
+
+    with open(output_stats_path, 'w') as output_stats_file:
+        output_stats_file.write('Stats of # of reads per barcode:\n\n')
+        output_stats_file.write("{}\t\t{}\t{}\t{}".format(
+            'Barcode', 'Name', 'Count', 'Output files\n'
+        ))
+        for name, count in stats.items():
+            output_stats_file.write("{}\t\t{}\t\t{}\t\t{}\t{}\n".format(
+                barcodes[name],
+                name,
+                count,
+                output_handles[name]['r1'].name,
+                output_handles[name]['r2'].name,
+            ))
+        final_count = sum(stats.values())
+        output_stats_file.write(
+            f'\nA total of {final_count} from {initial_count} '
+            f'reads were demultiplexed.'
+        )
+    subprocess.check_call(["cat", output_stats_path])
+
+
 # Main Function
 def demultiplex(
         output_dir,
@@ -108,6 +140,7 @@ def demultiplex(
         no_trim,
         overwrite):
 
+    print(f'Started demultiplexing files {r1_path} and {r2_path}')
     # Parse barcode dictionary
     barcodes = get_barcodes(barcodes_path)
 
@@ -130,6 +163,7 @@ def demultiplex(
         records_r1_gen = SeqIO.parse(fr1, 'fastq')
         records_r2_gen = SeqIO.parse(fr2, 'fastq')
 
+        initial_count = 0
         for record_r1 in records_r1_gen:
             record_r2 = next(records_r2_gen)
 
@@ -149,18 +183,26 @@ def demultiplex(
                     filtered_seq_r1.append(record_r1[len(barcode):])
                     filtered_seq_r2.append(record_r2[len(barcode):])
 
+                # Collect stats of demultiplexed ones
+                records_by_cell[cell] += 1
+
             # Write to files
             SeqIO.write(filtered_seq_r1, output_handles[cell]['r1'], 'fastq')
             SeqIO.write(filtered_seq_r2, output_handles[cell]['r2'], 'fastq')
 
             # Store some stats
-            records_by_cell[cell] += 1
+            initial_count += 1
 
     # Close Handles
     close_file_handles(output_handles)
 
     # Print Stats
     print(f'Finish Demultiplexing Files {r1_path} and {r2_path}')
-    print('Stats of # of reads per barcode: ')
-    print(records_by_cell)
+    create_output_stats(
+        output_dir,
+        records_by_cell,
+        barcodes,
+        output_handles,
+        initial_count
+    )
 

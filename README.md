@@ -14,33 +14,52 @@ The barcodes text file should be formatted to have 1 column with
 the barcodes, and an optional additional column to asign names to
 the demultiplexed result files.  the following structure:
 
-    \b
     ATTCGT       A1
     ATATTC       A2
     TCGGAC       B1
     TCGAGG       B2
 
-## Features
+## 📦 &nbsp; **Installation**
 
-* 📦 &nbsp; **Easy Installation**
+    pip install click_demultiplex
 
-        pip install click_demultiplex
-
-* 🍉 &nbsp; **Usage Documentation**
+## 🍉 &nbsp; **Usage**
 
         click_demultiplex --help
 
-* 🐳 &nbsp; **Containers Support**
+        click_demultiplex \
+            --r1 example/test_R1.fastq \
+            --r2 example/test_R2.fastq \
+            --barcodes example/test_barcodes.txt \
+            --outdir my_output_dir \
+            --no-trim
 
-        # docker usage
-        docker run --volume /shared_fs:/shared_fs --interactive --tty \
-            click_demultiplex-image
-            [click_demultiplex options]
+## 🐳 &nbsp; **Containers Support**
 
-        # singularity usage
-        singularity run --workdir /shared_fs/tmp --bind /shared_fs:/shared_fs \
-            click_demultiplex-singularity-image-path
-            [click_demultiplex options]
+* docker usage
+
+        docker run \
+            --volume /shared_fs:/shared_fs \
+            --interactive \
+            --tty \
+            click_demultiplex-image \
+                --r1 /code/example/test_R1.fastq \
+                --r2 /code/example/test_R2.fastq \
+                --barcodes /code/example/test_barcodes.txt \
+                --outdir /code/my_output_dir \
+                --no-trim
+
+* singularity usage
+
+        singularity run \
+            --workdir /shared_fs/tmp \
+            --bind /shared_fs:/shared_fs \
+            click_demultiplex-singularity-image-path \
+                --r1 /code/example/test_R1.fastq \
+                --r2 /code/example/test_R2.fastq \
+                --barcodes /code/example/test_barcodes.txt \
+                --outdir /code/my_output_dir \
+                --no-trim
 
 ## Contributing
 

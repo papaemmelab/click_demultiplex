@@ -30,17 +30,17 @@ from click_demultiplex import commands
 @click.option(
     "--r1",
     required=True,
-    type=click.Path(),
+    type=click.Path(exists=True),
     help="Path to R1 fastq file. Reads in forward orientation")
 @click.option(
     "--r2",
     required=True,
-    type=click.Path(),
+    type=click.Path(exists=True),
     help="Path to R2 fatsq file. Reads in reverse-complement orientation")
 @click.option(
     "--barcodes",
     required=True,
-    type=click.Path(),
+    type=click.Path(exists=True),
     help="A text file with the barcodes in each line.")
 @click.option(
     "--no-trim",
