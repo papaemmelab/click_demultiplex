@@ -32,6 +32,7 @@ the demultiplexed result files.  the following structure:
             --r2 example/test_R2.fastq \
             --barcodes example/test_barcodes.txt \
             --outdir my_output_dir \
+            --prefix plate_0008
             --no-trim
 
 ## 🐳 &nbsp; **Containers Support**
@@ -47,7 +48,6 @@ the demultiplexed result files.  the following structure:
                 --r2 /code/example/test_R2.fastq \
                 --barcodes /code/example/test_barcodes.txt \
                 --outdir /code/my_output_dir \
-                --no-trim
 
 * singularity usage
 
@@ -59,7 +59,7 @@ the demultiplexed result files.  the following structure:
                 --r2 /code/example/test_R2.fastq \
                 --barcodes /code/example/test_barcodes.txt \
                 --outdir /code/my_output_dir \
-                --no-trim
+
 
 ## Contributing
 
