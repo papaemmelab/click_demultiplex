@@ -56,8 +56,13 @@ from click_demultiplex import commands
     default=False,
     is_flag=True,
     help="Flag to overwrite the output files if they already exist.")
+@click.option(
+    "--max-mismatches",
+    default=1,
+    show_default=True,
+    help="Maximum number of mismatches allowed in the barcode to demultiplex.")
 @click.version_option(__version__)
-def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix):
+def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix, max_mismatches):
     """
     Demultiplex a paired-end fastq file into several fastq files,
     based on unique barcodes.
@@ -85,6 +90,7 @@ def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix):
         no_trim=no_trim,
         overwrite=overwrite,
         prefix=prefix,
+        max_mismatches=max_mismatches,
     )
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ import click
 import gzip
 
 
-# Utils
+# Utils for Scoring Sequences
 def similarity_score(pattern, read, quality):
     if len(pattern) == len(read) == len(quality):
         return sum([
@@ -50,6 +50,7 @@ def find_most_similar_paired(record1, record2, barcodes):
     raise Exception("R1 read sequence daoesn't match the R2 read sequence.")
 
 
+# Utils to manage files handles
 def create_output_handle(output_dir, name, overwrite, prefix, direction):
     """ Validate that output dir and files exist."""
     if not os.path.isdir(output_dir):
@@ -69,6 +70,7 @@ def create_output_handle(output_dir, name, overwrite, prefix, direction):
 
     return open(file_path, 'a')
 
+
 def get_files_handles(output_dir, barcodes, overwrite, prefix):
     """ Manage file handles to keep files open during demultiplexing."""
     return {
@@ -85,6 +87,7 @@ def close_file_handles(file_handles):
         file_cell_handles['r2'].close()
 
 
+# Util to parse barcodes
 def get_barcodes(barcodes_path):
     """
     Creates a dictionary with the barcodes. Where the key is name that will
@@ -100,6 +103,7 @@ def get_barcodes(barcodes_path):
     }
 
 
+# Utils to create output files
 def create_output_stats(
         output_dir,
         stats,
@@ -140,7 +144,8 @@ def demultiplex(
         barcodes_path,
         no_trim,
         overwrite,
-        prefix):
+        prefix,
+        max_mismatches):
 
     print(f'Started demultiplexing files {r1_path} and {r2_path}')
 
@@ -153,48 +158,50 @@ def demultiplex(
     # Collect some stats
     records_by_cell = {key: 0 for key in barcodes.keys()}
 
-    # Select open method depending of the format
+    # Select open method depending of the format of the files
     open_r1 = gzip.open if r1_path.endswith('gz') else open
     open_r2 = gzip.open if r2_path.endswith('gz') else open
 
     # Open record one by one of each file, classify it and output to file.
     with open_r1(r1_path, 'rt') as fr1, open_r2(r2_path, 'rt') as fr2:
 
-        filtered_seq_r1 = []
-        filtered_seq_r2 = []
-
+        # Get generators for both files
         records_r1_gen = SeqIO.parse(fr1, 'fastq')
         records_r2_gen = SeqIO.parse(fr2, 'fastq')
 
         initial_count = 0
+
         for record_r1 in records_r1_gen:
             record_r2 = next(records_r2_gen)
 
-            # Classify records according to barcode
-            cell, barcode = find_most_similar_paired(record_r1, record_r2, barcodes)
+            # Store some stats
+            initial_count += 1
 
+            # Classify records according to scoring against the barcode
+            cell, barcode = find_most_similar_paired(
+                record_r1,
+                record_r2,
+                barcodes
+            )
             mismatches_r1 = hamming_distance(record_r1[:len(barcode)], barcode)
             mismatches_r2 = hamming_distance(record_r2[:len(barcode)], barcode)
 
-            # Include only the trimmed sequences with 0 or 1 mismatch
-            if mismatches_r1 <= 1 or mismatches_r2 <= 1:
+            # Include only the sequences with the permitted mismatches
+            if (mismatches_r1 <= max_mismatches or
+                mismatches_r2 <= max_mismatches):
 
-                if no_trim:
-                    filtered_seq_r1.append(record_r1)
-                    filtered_seq_r2.append(record_r2)
-                else:
-                    filtered_seq_r1.append(record_r1[len(barcode):])
-                    filtered_seq_r2.append(record_r2[len(barcode):])
+                # Trim unless flag is passed
+                if not no_trim:
+                    record_r1 = record_r1[len(barcode):]
+                    record_r2 = record_r2[len(barcode):]
 
                 # Collect stats of demultiplexed ones
                 records_by_cell[cell] += 1
 
-            # Write to files
-            SeqIO.write(filtered_seq_r1, output_handles[cell]['r1'], 'fastq')
-            SeqIO.write(filtered_seq_r2, output_handles[cell]['r2'], 'fastq')
+                # Write to files
+                SeqIO.write(record_r1, output_handles[cell]['r1'], 'fastq')
+                SeqIO.write(record_r2, output_handles[cell]['r2'], 'fastq')
 
-            # Store some stats
-            initial_count += 1
 
     # Close Handles
     close_file_handles(output_handles)
