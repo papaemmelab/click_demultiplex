@@ -8,16 +8,7 @@ import click
 import gzip
 
 
-# Utils for Scoring Sequences
-def similarity_score(pattern, read, quality):
-    if len(pattern) == len(read) == len(quality):
-        return sum([
-            abs((1 if read[index] == pattern[index] else 0) - quality[index]/40) * 100
-            for index in range(len(pattern))
-        ])
-    raise Exception('Length of both reads do not match')
-
-
+# Utils for classifying Sequences
 def hamming_distance(pattern1, pattern2):
     if len(pattern1) == len(pattern2):
         return sum([
@@ -27,27 +18,28 @@ def hamming_distance(pattern1, pattern2):
     raise Exception('Length of both reads do not match')
 
 
-def find_array_positions(num, array):
-    return [index for index, item in enumerate(array) if item == num][0]
+def find_best_barcode(record, barcodes):
+    distance = [
+        hamming_distance(barcode, record.seq[:len(barcode)])
+        for barcode in barcodes.values()
+    ]
+    min_distance = min(distance)
+    matched_barcode = [
+        barcode
+        for barcode in barcodes.items()
+    ][distance.index(min(distance))]
+    return matched_barcode + (min_distance,)
 
 
-def find_most_similar_paired(record1, record2, barcodes):
-    if record1.id == record2.id:
-        sequence1 = record1.seq[:6]
-        sequence2 = record2.seq[:6]
-        quality1 = record1.letter_annotations['phred_quality'][:6]
-        quality2 = record2.letter_annotations['phred_quality'][:6]
-        distance = [
-            similarity_score(barcode, sequence1, quality1) +
-            similarity_score(barcode, sequence2, quality2)
-            for barcode in barcodes.values()
-        ]
-        matched_barcode = [
-            barcode
-            for barcode in barcodes.items()
-        ][find_array_positions(min(distance), distance)]
-        return matched_barcode
-    raise Exception("R1 read sequence daoesn't match the R2 read sequence.")
+def find_best_match(record1, record2, barcodes, max_mismatches):
+    name1, barcode1, distance1 = find_best_barcode(record1, barcodes)
+    name2, barcode2, distance2 = find_best_barcode(record2, barcodes)
+
+    if distance1 <= distance2 and distance1 <= max_mismatches:
+        return name1, barcode1
+    elif distance2 <= distance1 and distance2 <= max_mismatches:
+        return name2, barcode2
+    return None, None
 
 
 # Utils to manage files handles
@@ -147,8 +139,6 @@ def demultiplex(
         prefix,
         max_mismatches):
 
-    print(f'Started demultiplexing files {r1_path} and {r2_path}')
-
     # Parse barcode dictionary
     barcodes = get_barcodes(barcodes_path)
 
@@ -169,45 +159,43 @@ def demultiplex(
         records_r1_gen = SeqIO.parse(fr1, 'fastq')
         records_r2_gen = SeqIO.parse(fr2, 'fastq')
 
-        initial_count = 0
+        label = f'Started demultiplexing files {r1_path} and {r2_path}'
+        with click.progressbar(records_r1_gen,
+            label=label, color='green') as bar:
 
-        for record_r1 in records_r1_gen:
-            record_r2 = next(records_r2_gen)
+            initial_count = 0
 
-            # Store some stats
-            initial_count += 1
+            for record_r1 in bar:
+                record_r2 = next(records_r2_gen)
 
-            # Classify records according to scoring against the barcode
-            cell, barcode = find_most_similar_paired(
-                record_r1,
-                record_r2,
-                barcodes
-            )
-            mismatches_r1 = hamming_distance(record_r1[:len(barcode)], barcode)
-            mismatches_r2 = hamming_distance(record_r2[:len(barcode)], barcode)
+                # Store some stats
+                initial_count += 1
 
-            # Include only the sequences with the permitted mismatches
-            if (mismatches_r1 <= max_mismatches or
-                mismatches_r2 <= max_mismatches):
+                cell, barcode = find_best_match(
+                    record_r1,
+                    record_r2,
+                    barcodes,
+                    max_mismatches
+                )
 
-                # Trim unless flag is passed
-                if not no_trim:
-                    record_r1 = record_r1[len(barcode):]
-                    record_r2 = record_r2[len(barcode):]
+                if cell and barcode:
 
-                # Collect stats of demultiplexed ones
-                records_by_cell[cell] += 1
+                    # Trim unless flag is passed
+                    if not no_trim:
+                        record_r1 = record_r1[len(barcode):]
+                        record_r2 = record_r2[len(barcode):]
 
-                # Write to files
-                SeqIO.write(record_r1, output_handles[cell]['r1'], 'fastq')
-                SeqIO.write(record_r2, output_handles[cell]['r2'], 'fastq')
+                    # Collect stats of demultiplexed ones
+                    records_by_cell[cell] += 1
 
+                    # Write to files
+                    SeqIO.write(record_r1, output_handles[cell]['r1'], 'fastq')
+                    SeqIO.write(record_r2, output_handles[cell]['r2'], 'fastq')
 
     # Close Handles
     close_file_handles(output_handles)
 
     # Print Stats
-    print(f'Finish Demultiplexing Files {r1_path} and {r2_path}')
     create_output_stats(
         output_dir,
         records_by_cell,
