@@ -43,6 +43,10 @@ from click_demultiplex import commands
     type=click.Path(exists=True),
     help="A text file with the barcodes in each line.")
 @click.option(
+    "--prefix",
+    default="",
+    help="String to add to output files.")
+@click.option(
     "--no-trim",
     default=False,
     is_flag=True,
@@ -53,7 +57,7 @@ from click_demultiplex import commands
     is_flag=True,
     help="Flag to overwrite the output files if they already exist.")
 @click.version_option(__version__)
-def main(outdir, r1, r2, barcodes, no_trim, overwrite):
+def main(outdir, r1, r2, barcodes, no_trim, overwrite, prefix):
     """
     Demultiplex a paired-end fastq file into several fastq files,
     based on unique barcodes.
@@ -71,6 +75,8 @@ def main(outdir, r1, r2, barcodes, no_trim, overwrite):
         TCGGAC       B1
         TCGAGG       B2
     """
+    prefix = prefix if prefix.endswith('_') else f'{prefix}_'
+
     commands.demultiplex(
         output_dir=outdir,
         r1_path=r1,
@@ -78,6 +84,7 @@ def main(outdir, r1, r2, barcodes, no_trim, overwrite):
         barcodes_path=barcodes,
         no_trim=no_trim,
         overwrite=overwrite,
+        prefix=prefix,
     )
 
 if __name__ == "__main__":

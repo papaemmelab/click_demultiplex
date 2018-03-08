@@ -50,14 +50,14 @@ def find_most_similar_paired(record1, record2, barcodes):
     raise Exception("R1 read sequence daoesn't match the R2 read sequence.")
 
 
-def create_output_handle(output_dir, name, overwrite, direction):
+def create_output_handle(output_dir, name, overwrite, prefix, direction):
     """ Validate that output dir and files exist."""
     if not os.path.isdir(output_dir):
         raise click.UsageError(
             f'Output directory {output_dir} doesn`t exist.'
         )
 
-    file_path = join(output_dir, f'{name}_R{direction}.fastq')
+    file_path = join(output_dir, f'{prefix}{name}_R{direction}.fastq')
     if os.path.isfile(file_path):
         if overwrite:
             os.remove(file_path)
@@ -69,12 +69,12 @@ def create_output_handle(output_dir, name, overwrite, direction):
 
     return open(file_path, 'a')
 
-def get_files_handles(output_dir, barcodes, overwrite):
+def get_files_handles(output_dir, barcodes, overwrite, prefix):
     """ Manage file handles to keep files open during demultiplexing."""
     return {
         cell: {
-            'r1': create_output_handle(output_dir, cell, overwrite, 1),
-            'r2': create_output_handle(output_dir, cell, overwrite, 2)
+            'r1': create_output_handle(output_dir, cell, overwrite, prefix, 1),
+            'r2': create_output_handle(output_dir, cell, overwrite, prefix, 2)
         }
         for cell in barcodes.keys()
     }
@@ -105,18 +105,19 @@ def create_output_stats(
         stats,
         barcodes,
         output_handles,
-        initial_count):
+        initial_count,
+        prefix):
     """Print stats of results."""
 
-    output_stats_path = join(output_dir, 'result_stats.txt')
+    output_stats_path = join(output_dir, f'{prefix}result_stats.txt')
 
     with open(output_stats_path, 'w') as output_stats_file:
         output_stats_file.write('Stats of # of reads per barcode:\n\n')
-        output_stats_file.write("{}\t\t{}\t{}\t{}".format(
+        output_stats_file.write("{}\t{}\t{}\t{}".format(
             'Barcode', 'Name', 'Count', 'Output files\n'
         ))
         for name, count in stats.items():
-            output_stats_file.write("{}\t\t{}\t\t{}\t\t{}\t{}\n".format(
+            output_stats_file.write("{}\t{}\t{}\t{}\t{}\n".format(
                 barcodes[name],
                 name,
                 count,
@@ -126,7 +127,7 @@ def create_output_stats(
         final_count = sum(stats.values())
         output_stats_file.write(
             f'\nA total of {final_count} from {initial_count} '
-            f'reads were demultiplexed.'
+            f'reads were demultiplexed.\n'
         )
     subprocess.check_call(["cat", output_stats_path])
 
@@ -138,14 +139,16 @@ def demultiplex(
         r2_path,
         barcodes_path,
         no_trim,
-        overwrite):
+        overwrite,
+        prefix):
 
     print(f'Started demultiplexing files {r1_path} and {r2_path}')
+
     # Parse barcode dictionary
     barcodes = get_barcodes(barcodes_path)
 
     # Get handles for output files
-    output_handles = get_files_handles(output_dir, barcodes, overwrite)
+    output_handles = get_files_handles(output_dir, barcodes, overwrite, prefix)
 
     # Collect some stats
     records_by_cell = {key: 0 for key in barcodes.keys()}
@@ -203,6 +206,7 @@ def demultiplex(
         records_by_cell,
         barcodes,
         output_handles,
-        initial_count
+        initial_count,
+        prefix
     )
 
