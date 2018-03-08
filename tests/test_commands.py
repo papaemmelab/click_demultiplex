@@ -7,10 +7,12 @@ from glob import glob
 import subprocess
 
 from Bio import SeqIO
+from click.testing import CliRunner
 import click
 import pandas as pd
 import pytest
 
+from click_demultiplex import cli
 from click_demultiplex import commands
 
 
@@ -18,6 +20,17 @@ ROOT = abspath(dirname(__file__))
 TEST_R1 = join(ROOT, 'data', 'test_R1.fastq')
 TEST_R2 = join(ROOT, 'data', 'test_R2.fastq')
 TEST_BARCODES = join(ROOT, 'data', 'test_barcodes.txt')
+
+
+def test_cli(tmpdir):
+    params = [
+        "--r1", TEST_R1,
+        "--r2", TEST_R2,
+        "--outdir", tmpdir.strpath,
+        "--barcodes", TEST_BARCODES,
+    ]
+    result = CliRunner().invoke(cli.main, params)
+    assert result.exit_code == 0
 
 
 def test_defaults(tmpdir):
