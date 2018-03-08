@@ -110,3 +110,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Test output
+output/
+
+# Pytest Cache
+.pytest_cache/

@@ -19,7 +19,9 @@
     ],
     "install_requires": [
         "Click>=6.7",
-        "docker==2.5.1"
+        "biopython==1.70",
+        "docker==2.5.1",
+        "pandas==0.22.0"
     ],
     "extras_require": {
         "test": [
