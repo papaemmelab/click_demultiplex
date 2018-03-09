@@ -25,6 +25,7 @@ from click_demultiplex import commands
 @click.option(
     "--outdir",
     show_default=True,
+    required=True,
     help="Path to output directory.",
     default=None)
 @click.option(

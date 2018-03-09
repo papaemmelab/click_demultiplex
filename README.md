@@ -25,15 +25,29 @@ the demultiplexed result files.  the following structure:
 
 ## 🍉 &nbsp; **Usage**
 
-        click_demultiplex --help
+    click_demultiplex \
+        --r1 test/data/test_R1.fastq \
+        --r2 test/data/test_R2.fastq \
+        --barcodes test/data/test_barcodes.txt \
+        --outdir my_output_dir
 
-        click_demultiplex \
-            --r1 test/data/test_R1.fastq \
-            --r2 test/data/test_R2.fastq \
-            --barcodes test/data/test_barcodes.txt \
-            --outdir my_output_dir \
-            --prefix plate_0008
-            --no-trim
+```
+click_demultiplex --help
+
+Options:
+
+    --outdir TEXT             Path to output directory. [required]
+    --r1 PATH                 Path to R1 fastq file. Reads in forward orientation.  [required]
+    --r2 PATH                 Path to R2 fatsq file. Reads in reverse-complementorientation.  [required]
+    --barcodes PATH           A text file with the barcodes in each line. [required]
+    --prefix TEXT             String to add to output files.
+    --no-trim                 Flag to avoid trimming the barcodes in each read.
+    --overwrite               Flag to overwrite the output files if they already exist.
+    --max-mismatches INTEGER  Maximum number of mismatches allowed with the barcode to demultiplex.  [default: 1]
+    --version                 Show the version and exit.
+    --help                    Show this message and exit.
+
+```
 
 
 ## Contributing
