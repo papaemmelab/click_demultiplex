@@ -35,34 +35,6 @@ the demultiplexed result files.  the following structure:
             --prefix plate_0008
             --no-trim
 
-## 🐳 &nbsp; **Containers Support**
-
-Having the files in a local directory:
-
-        ls local/path/
-            r1.fastq
-            r2.fatsq
-            barcodes.txt
-
-* Usage with **docker**
-
-        docker run --volumes local/path:/data juanesarango/click_demultiplex
-            --r1 /data/r1.fastq
-            --r2 /data/r2.fatsq
-            --barcodes /data/barcodes.txt
-            --outdir /data/outdir
-
-* Usage with **singularity**
-
-
-        singularity run --bind local-path:/data docker://juanesarango/click_demultiplex
-            --r1 /data/r1.fastq
-            --r2 /data/r2.fatsq
-            --barcodes /data/barcodes.txt
-            --outdir /data/outdir
-
-
-    See [docker2singularity] if you need a [`singularity`] image. Else use the `docker://` prefix.
 
 ## Contributing
 
@@ -80,9 +52,9 @@ This package was created using [Cookiecutter] and the
 [leukgen/cookiecutter-toil]: https://github.com/leukgen/cookiecutter-toil
 
 <!-- Badges -->
-[codecov_badge]: https://codecov.io/gh/juanesarango/click_demultiplex/branch/master/graph/badge.svg
-[codecov_base]: https://codecov.io/gh/juanesarango/click_demultiplex
+[codecov_badge]: https://codecov.io/gh/leukgen/click_demultiplex/branch/master/graph/badge.svg
+[codecov_base]: https://codecov.io/gh/leukgen/click_demultiplex
 [pypi_badge]: https://img.shields.io/pypi/v/click_demultiplex.svg
 [pypi_base]: https://pypi.python.org/pypi/click_demultiplex
-[travis_badge]: https://img.shields.io/travis/juanesarango/click_demultiplex.svg
-[travis_base]: https://travis-ci.org/juanesarango/click_demultiplex
+[travis_badge]: https://img.shields.io/travis/leukgen/click_demultiplex.svg
+[travis_base]: https://travis-ci.org/leukgen/click_demultiplex

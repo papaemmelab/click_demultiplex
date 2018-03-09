@@ -8,9 +8,6 @@ cache:
 python:
   - 3.6
 
-services:
-  - docker
-
 install:
   - pip install -U tox-travis codecov
 
