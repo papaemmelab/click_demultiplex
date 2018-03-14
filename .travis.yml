@@ -20,7 +20,8 @@ deploy:
   provider: pypi
   distributions: sdist bdist_wheel
   user: leukgen
-  password: <REPLACE THIS AND RUN `travis encrypt --add deploy.password`>
+  password:
+    secure: g9UOxVIGDTT+s36CJCV3f1POScVwmbGZxx9el8I/GbgvMvth6fMCZ8YnT42Od6GDJqIq5WSI9Ps2cUgPgMGUndsOMT3gS64v8ib16eulwpnIQC/1GkJ90kUfXQZWYwJzqHdgut/BcEwwDDt2yqsHOWHnitaIj5iSpBLv4g0xjP/YrpUVglFyh5jbEq3vfBytcj9SQxqc6ix6dWWEOMffGtbShOmRIQwDKWyyU/rdxXqNBSlkoe46HkTMUD5vbIsqQgqTfaHR0yc1UhyfeJ2OAprLsqmk8nLec3vIWzp6g5tO7Ywuhv4YSJzfZu8SpqMipLUlyus4ot98c0H0NEZKf9RGW2bkHf8bBTDm/96NILCGffRUoGEf4UhwkbAGLGtk5wcxLgpoatV9b5xFtC5/CtXccV9LzlezAYiJeTg9GcWwZv0I6ZwI0wqg7hMp4RmcWxFwuPB6E5Wh3eQh4xbQmqWtsDVKgOCJQFc/CVjHale6MJT1r/dcaYspcNxrdhZh6/9I+fKxpeY06i0mI/EoU+oStZ0gnWqP8hTsgy/k8m2rfMNlf+I49DtKlkN16y+u5r9TW08AoVMX4ZhpbMn8lM7zVaKcOs5fN62xRPD3s5nj3LcqCrjzC+9Lh5HQrzqo19fgEG7mmgd+O1VBlwr3W7K7RIqIDgPkIMGm+OSBYyo=
   on:
     tags: true
     repo: leukgen/click_demultiplex
