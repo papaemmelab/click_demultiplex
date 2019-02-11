@@ -41,7 +41,7 @@ def find_best_match(record1, record2, barcodes, max_mismatches):
 
     if distance1 <= distance2 and distance1 <= max_mismatches:
         return name1, barcode1
-    elif distance2 <= distance1 and distance2 <= max_mismatches:
+    if distance2 <= distance1 and distance2 <= max_mismatches:
         return name2, barcode2
     return None, None
 
