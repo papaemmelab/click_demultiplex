@@ -19,11 +19,11 @@ after_success:
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
-  user: leukgen
+  user: papaemmelab
   password:
     secure: HGwN6B2PBKzKWj2WzBo0KaySh1A8/0L/yVbVuViUAxx3Eh0a3LLQxr3cZMhUwgcz+Q0HoKxjTVkUGMm3PmXbO6Zs2aSeKn5yZagL5vZK6vP/yEpa60MYYzIYafNyhw5a9ACM8T4tJp2jQAvcAJhXLzS06n6iSKuHHKX9w7oMp2iHChDIb7DjpNxiXm2SbBKvPIQJhRsfJXuYh5Dai6a+yNf4JIRvMkvn2dtez9cx1sASHq4E2ZKGGAM/bNm+qsZnWtComanpCL9u7UBAol4JQv6Ji7WHjD5MiC5n6zMwAGsSUoc5Y3IqkyJP6Gfp1nkeFzvQY+ZnMTK7raUwzAo7KsvhJTjge8EfZ6ldPnKOMmtkPkmChG5UxrUshcE7S0Yz3vDTWV6aty6qDG4Tsw4zQlFbEZPWc49B8w7tfcv+uY6QA9+Ug5QgKG94505kgnfyG5X3u5zrSyPtJjTSW4MPUJxJUahuF8I93JA5OwNhL0aCiMXeKdvZTujjWO6J0m3kBCmgjon3hZ1I3YG/3k4/ripcOt39cbc5uue9D43PQrp8aBjIbtqgTKLgLuK1v2/vE7YWzKpZclgEpFQrAztpaAKVr45BFG1qeSTT6DJKd9x5yOPsfuyP7pefXhQAk7DlZkDch2LO4ynRbdsNRitnimA98SVlfvnXXYUKVGZCT7w=
   on:
     tags: true
-    repo: leukgen/click_demultiplex
+    repo: papaemmelab/click_demultiplex
     python: 3.6
     branch: master

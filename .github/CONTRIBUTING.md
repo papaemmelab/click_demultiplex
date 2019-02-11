@@ -10,7 +10,7 @@ Set up for local development:
 
 1. Clone your click_demultiplex locally:
 
-        git clone git@github.com:leukgen/click_demultiplex.git
+        git clone git@github.com:papaemmelab/click_demultiplex.git
 
 1. Create a branch for local development:
 
@@ -58,13 +58,13 @@ Set up for local development:
 
     If you are suggesting a new version make sure you are following the [semantic versioning] guidelines and then update the [`VERSION`] file:
 
-        git add leukgen/VERSION
+        git add papaemmelab/VERSION
         git commit -m ":gem: bump to version 0.1.0"
 
 1. Submit a pull request through the GitHub website.
 
 <!-- References -->
-[`VERSION`]: ../leukgen/VERSION
+[`VERSION`]: ../papaemmelab/VERSION
 [`.gitmessage`]: ../.gitmessage
 [pytest]: https://docs.pytest.org/en/latest/
 [pytest-env]: https://github.com/MobileDynasty/pytest-env
@@ -73,4 +73,4 @@ Set up for local development:
 [pydocstyle]: http://www.pydocstyle.org/en
 [pylint]: https://www.pylint.org/
 [coverage]:https://coverage.readthedocs.io
-[issue]: https://github.com/leukgen/click_demultiplex/issues
+[issue]: https://github.com/papaemmelab/click_demultiplex/issues

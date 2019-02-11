@@ -58,18 +58,18 @@ Contributions are welcome, and they are greatly appreciated, check our [contribu
 ## Credits
 
 This package was created using [Cookiecutter] and the
-[leukgen/cookiecutter-toil] project template.
+[papaemmelab/cookiecutter-toil] project template.
 
 <!-- References -->
 [`singularity`]: http://singularity.lbl.gov/
 [docker2singularity]: https://github.com/singularityware/docker2singularity
 [cookiecutter]: https://github.com/audreyr/cookiecutter
-[leukgen/cookiecutter-toil]: https://github.com/leukgen/cookiecutter-toil
+[papaemmelab/cookiecutter-toil]: https://github.com/papaemmelab/cookiecutter-toil
 
 <!-- Badges -->
-[codecov_badge]: https://codecov.io/gh/leukgen/click_demultiplex/branch/master/graph/badge.svg
-[codecov_base]: https://codecov.io/gh/leukgen/click_demultiplex
+[codecov_badge]: https://codecov.io/gh/papaemmelab/click_demultiplex/branch/master/graph/badge.svg
+[codecov_base]: https://codecov.io/gh/papaemmelab/click_demultiplex
 [pypi_badge]: https://img.shields.io/pypi/v/click_demultiplex.svg
 [pypi_base]: https://pypi.python.org/pypi/click_demultiplex
-[travis_badge]: https://img.shields.io/travis/leukgen/click_demultiplex.svg
-[travis_base]: https://travis-ci.org/leukgen/click_demultiplex
+[travis_badge]: https://img.shields.io/travis/papaemmelab/click_demultiplex.svg
+[travis_base]: https://travis-ci.org/papaemmelab/click_demultiplex

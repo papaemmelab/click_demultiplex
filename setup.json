@@ -37,7 +37,7 @@
     "license": "BSD",
     "name": "click_demultiplex",
     "test_suite": "tests",
-    "long_description": "📘 learn more on `GitHub <https://github.com/leukgen/click_demultiplex>`_!",
+    "long_description": "📘 learn more on `GitHub <https://github.com/papaemmelab/click_demultiplex>`_!",
     "description": "Command Line Tool to Demultiplex a paired-end fastq file into several fastq files,",
-    "url": "https://github.com/leukgen/click_demultiplex"
+    "url": "https://github.com/papaemmelab/click_demultiplex"
 }
